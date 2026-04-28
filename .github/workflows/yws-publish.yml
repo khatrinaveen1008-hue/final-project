@@ -39,16 +39,21 @@ jobs:
           Xvfb :99 -screen 0 1280x1024x24 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
 
+      # ✅ working-directory: playwright wapas add kiya
       - name: Build
-        run: mvn clean compile        # ✅ working-directory hataya
+        working-directory: playwright
+        run: mvn clean compile -e
 
       - name: Create creds
+        working-directory: playwright
         run: echo '${{ secrets.GOOGLE_CREDS }}' > pondsdata-58d9eaf0ae83.json
 
       - name: Install Playwright
+        working-directory: playwright
         run: mvn exec:java -Dexec.mainClass="com.microsoft.playwright.CLI" -Dexec.args="install"
 
       - name: Run Selected Class
+        working-directory: playwright
         run: mvn exec:java -Dexec.mainClass=${{ github.event.inputs.runclass }}
         env:
           TESSDATA_PREFIX: /usr/share/tesseract-ocr/5/tessdata
