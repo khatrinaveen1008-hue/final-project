@@ -27,9 +27,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # ==============================
-      # ✅ SIRF YE 2 STEPS NAYE HAIN
-      # ==============================
       - name: Install Tesseract OCR
         run: |
           sudo apt-get update -qq
@@ -41,22 +38,17 @@ jobs:
           sudo apt-get install -y xvfb
           Xvfb :99 -screen 0 1280x1024x24 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
-      # ==============================
 
       - name: Build
-        working-directory: playwright
-        run: mvn clean compile
+        run: mvn clean compile        # ✅ working-directory hataya
 
       - name: Create creds
-        working-directory: playwright
         run: echo '${{ secrets.GOOGLE_CREDS }}' > pondsdata-58d9eaf0ae83.json
 
       - name: Install Playwright
-        working-directory: playwright
         run: mvn exec:java -Dexec.mainClass="com.microsoft.playwright.CLI" -Dexec.args="install"
 
       - name: Run Selected Class
-        working-directory: playwright
         run: mvn exec:java -Dexec.mainClass=${{ github.event.inputs.runclass }}
         env:
           TESSDATA_PREFIX: /usr/share/tesseract-ocr/5/tessdata
